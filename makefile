@@ -1,3 +1,4 @@
+# GRR20196049 Iago Mello Floriano
 CC = gcc
 CFLAGS = -Wall
 executables = wavinfo
