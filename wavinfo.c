@@ -1,6 +1,8 @@
 // GRR20196049 Iago Mello Floriano
+#include "wavflags.h"
 #include "wavlib.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 // Funtion to print just the information in the riff
 void fprintRIFF(FILE *f, riff_t riff) {
@@ -37,12 +39,18 @@ void fprintheader(FILE *f, WAVHEADER_t header) {
   fprintf(f, "samples per cahnnel\t : %d\n", header.data.SubChunkSize / bytesPsample / header.fmt.NumChannels);
 }
 
+void printUsage(char *programName) {
+  fprintf(stderr, "Correct usage is %s -i input.wav\n", programName);
+  exit(0);
+}
+
 int main(int argc, char *argv[]) {
   WAVHEADER_t hAudio;
-  int iInput = 0;
-  ioflags(argc, argv, &iInput, NULL);
+  WavFlags_t flags;
+  if (wavflags(argc, argv, "i", &flags) == -1)
+    printUsage(argv[0]);
 
-  readHeaderInput(iInput, argv, &hAudio);
+  readHeaderInput(argv[flags.iFlag], &hAudio);
 
   fprintheader(stdout, hAudio);
 
