@@ -6,11 +6,12 @@ executables = wavinfo
 all: ${executables}
 
 # compiling of programs
-wavinfo: wavinfo.o wavlib.o
+wavinfo: wavinfo.o wavlib.o wavflags.o
 
 # compiling objects
 wavlib.o: wavlib.c wavlib.h
-wavinfo.o: wavinfo.c wavlib.h
+wavflags.o: wavflags.c wavflags.h
+wavinfo.o: wavinfo.c wavlib.h wavflags.h
 
 # deletion of temporary files
 clean: 
