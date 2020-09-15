@@ -50,7 +50,12 @@ int main(int argc, char *argv[]) {
   if (wavflags(argc, argv, "i", &flags) == -1)
     printUsage(argv[0]);
 
-  readHeaderInput(argv[flags.iFlag], &hAudio);
+  FILE *f;
+  if (flags.iFlag > 0)
+    readHeaderInput(argv[flags.iFlag], &hAudio, &f);
+  else
+    readHeaderInput(NULL, &hAudio, &f);
+  fclose(f);
 
   fprintheader(stdout, hAudio);
 
