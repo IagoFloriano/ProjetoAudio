@@ -3,19 +3,19 @@
 #ifndef __WAVFLAGS__
 #define __WAVFLAGS__
 
-// Struct to save the index of the next element to the flag in argv
+// Struct to save the string of the option passed for that flag
 // Example: ./program -i test -o testo
-// argv[iFlag] == "test"; argv[oFlag] = "testo"
+// iFlag == "test"; oFlag = "testo"
 typedef struct {
-  int iFlag;
-  int oFlag;
-  int lFlag;
-  int tFlag;
+  char *iFlag;
+  char *oFlag;
+  char *lFlag;
+  char *tFlag;
 } WavFlags_t;
 
 /*reads the desired flags (only gets the desired ones)
-  if flag not found or undesired value will be -1
-  if flag found it will be stored the value of the index
+  if flag not found or undesired value will be NULL
+  if flag found it will be stored the string
   returns 1 if flags used correctly, returns -1 otherwise*/
 int wavflags(int argc, char **argv, char *desiredFlags, WavFlags_t *savedFlags);
 
