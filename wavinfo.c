@@ -47,12 +47,12 @@ void printUsage(char *programName) {
 int main(int argc, char *argv[]) {
   WAVHEADER_t hAudio;
   WavFlags_t flags;
-  if (wavflags(argc, argv, "i", &flags) == -1)
+  if (wavflags(argc, argv, "i:", &flags) == -1)
     printUsage(argv[0]);
 
   FILE *f;
   if (flags.iFlag > 0)
-    readHeaderInput(argv[flags.iFlag], &hAudio, &f);
+    readHeaderInput(flags.iFlag, &hAudio, &f);
   else
     readHeaderInput(NULL, &hAudio, &f);
   fclose(f);
