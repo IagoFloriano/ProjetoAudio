@@ -38,10 +38,10 @@ typedef struct {
 // Struct for the samples
 typedef struct {
   union {
-    uint8_t *array1b;
-    uint16_t *array2b;
-    uint32_t *array3b;
-    uint64_t *array4b;
+    int8_t *array1b;
+    int16_t *array2b;
+    int32_t *array3b;
+    int64_t *array4b;
   };
   int numbytes;  //number of bytes in each sample
   int audioSize; //number of samples

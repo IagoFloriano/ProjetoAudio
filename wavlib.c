@@ -28,16 +28,16 @@ int initializeWavData(WAV_t *wav) {
   // allocs space depending on what is needed
   switch (wav->data.numbytes) {
   case 1:
-    wav->data.array1b = malloc(sizeof(uint8_t) * wav->data.audioSize);
+    wav->data.array1b = malloc(sizeof(int8_t) * wav->data.audioSize);
     break;
   case 2:
-    wav->data.array2b = malloc(sizeof(uint16_t) * wav->data.audioSize);
+    wav->data.array2b = malloc(sizeof(int16_t) * wav->data.audioSize);
     break;
   case 3:
-    wav->data.array3b = malloc(sizeof(uint32_t) * wav->data.audioSize);
+    wav->data.array3b = malloc(sizeof(int32_t) * wav->data.audioSize);
     break;
   case 4:
-    wav->data.array4b = malloc(sizeof(uint64_t) * wav->data.audioSize);
+    wav->data.array4b = malloc(sizeof(int64_t) * wav->data.audioSize);
     break;
   }
 
@@ -54,16 +54,16 @@ int initializeWav(char *path, WAV_t *wav, FILE **f) {
 int readAudioData(FILE *f, WAV_t *wav) {
   switch (wav->data.numbytes) {
   case 1:
-    fread(wav->data.array1b, sizeof(uint8_t), wav->data.audioSize, f);
+    fread(wav->data.array1b, sizeof(int8_t), wav->data.audioSize, f);
     break;
   case 2:
-    fread(wav->data.array2b, sizeof(uint16_t), wav->data.audioSize, f);
+    fread(wav->data.array2b, sizeof(int16_t), wav->data.audioSize, f);
     break;
   case 3:
-    fread(wav->data.array3b, sizeof(uint32_t), wav->data.audioSize, f);
+    fread(wav->data.array3b, sizeof(int32_t), wav->data.audioSize, f);
     break;
   case 4:
-    fread(wav->data.array4b, sizeof(uint64_t), wav->data.audioSize, f);
+    fread(wav->data.array4b, sizeof(int64_t), wav->data.audioSize, f);
     break;
   }
   return 0;
@@ -73,16 +73,16 @@ void writeWav(FILE *f, WAV_t *wav) {
   fwrite(&(wav->header), sizeof(WAVHEADER_t), 1, f);
   switch (wav->data.numbytes) {
   case 1:
-    fwrite(wav->data.array1b, sizeof(uint8_t), wav->data.audioSize, f);
+    fwrite(wav->data.array1b, sizeof(int8_t), wav->data.audioSize, f);
     break;
   case 2:
-    fwrite(wav->data.array2b, sizeof(uint16_t), wav->data.audioSize, f);
+    fwrite(wav->data.array2b, sizeof(int16_t), wav->data.audioSize, f);
     break;
   case 3:
-    fwrite(wav->data.array3b, sizeof(uint32_t), wav->data.audioSize, f);
+    fwrite(wav->data.array3b, sizeof(int32_t), wav->data.audioSize, f);
     break;
   case 4:
-    fwrite(wav->data.array4b, sizeof(uint64_t), wav->data.audioSize, f);
+    fwrite(wav->data.array4b, sizeof(int64_t), wav->data.audioSize, f);
     break;
   }
 }
