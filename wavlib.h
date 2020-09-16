@@ -1,8 +1,9 @@
 // GRR20196049 Iago Mello Floriano
-#include <stdint.h>
-#include <stdio.h>
 #ifndef __WAVLIB__
 #define __WAVLIB__
+
+#include <stdint.h>
+#include <stdio.h>
 
 // Structs for the header
 typedef struct {
