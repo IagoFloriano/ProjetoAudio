@@ -3,7 +3,6 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 int wavflags(int argc, char **argv, char *desiredFlags, WavFlags_t *savedFlags) {
