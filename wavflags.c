@@ -10,7 +10,7 @@ int wavflags(int argc, char **argv, char *desiredFlags, WavFlags_t *savedFlags) 
   savedFlags->iFlag = savedFlags->lFlag = savedFlags->oFlag = savedFlags->tFlag = NULL; //Initialization
   int option;
 
-  // set the index values for the variables
+  // set the strings of the flags
   while ((option = getopt(argc, argv, desiredFlags)) != -1) {
     switch (option) {
     case 'i':
