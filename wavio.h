@@ -1,4 +1,4 @@
-// GRR20196049
+// GRR20196049 Iago Mello Floriano
 
 //Library to make it easier to read a wav file from one input and write it to a desired output
 
