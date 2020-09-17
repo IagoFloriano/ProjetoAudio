@@ -6,8 +6,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void echoChannel(WAVData_t *audio, int channel, int numchannels, float echolevel, int echodelay, int sampleRate) {
+  // goes backwards to the channel so there wont be echo of echo
+  int iGetEchoFrom = echodelay * sampleRate / 1000; //sampleRate * 1000 * echodelay; // how many indexes back from this channel the echo will be taken from
+  for (int i = audio->audioSize - 1; i - (iGetEchoFrom * numchannels) >= 0; i -= numchannels) {
+    switch (audio->numbytes) {
+    case 1:
+      if ((audio->array1b)[i] + echolevel * (audio->array1b)[i - (iGetEchoFrom * numchannels)] > INT8_MAX) {
+        (audio->array1b)[i] = INT8_MAX;
+      } else
+        (audio->array1b)[i] += echolevel * (audio->array1b)[i - (iGetEchoFrom * numchannels)];
+      break;
+    case 2:
+      if ((audio->array2b)[i] + echolevel * (audio->array2b)[i - (iGetEchoFrom * numchannels)] > INT16_MAX) {
+        (audio->array2b)[i] = INT16_MAX;
+      } else
+        (audio->array2b)[i] += echolevel * (audio->array2b)[i - (iGetEchoFrom * numchannels)];
+      break;
+    case 3:
+      if ((audio->array3b)[i] + echolevel * (audio->array3b)[i - (iGetEchoFrom * numchannels)] > INT32_MAX) {
+        (audio->array3b)[i] = INT32_MAX;
+      } else
+        (audio->array3b)[i] += echolevel * (audio->array3b)[i - (iGetEchoFrom * numchannels)];
+      break;
+    case 4:
+      if ((audio->array4b)[i] + echolevel * (audio->array4b)[i - (iGetEchoFrom * numchannels)] > INT64_MAX) {
+        (audio->array4b)[i] = INT64_MAX;
+      } else
+        (audio->array4b)[i] += echolevel * (audio->array4b)[i - (iGetEchoFrom * numchannels)];
+      break;
+    }
+  }
+}
+
 void printUsage(char *program) {
-  fprintf(stderr, "Incorrect usage of program, example of correct usage:\n%s -t 500 -l 0.5 -i input.wav -o output.wav\n");
+  fprintf(stderr, "Incorrect usage of program, example of correct usage:\n%s -t 500 -l 0.5 -i input.wav -o output.wav\n", program);
   exit(1);
 }
 
@@ -18,6 +51,27 @@ int main(int argc, char **argv) {
   if (wavflags(argc, argv, "i:o:l:t:", &flags) == -1)
     printUsage(argv[0]);
   checkInput(flags, &wav);
+
+  // Setting variables to apply echo
+  float l = 0.5;
+  if (flags.lFlag) {
+    l = atof(flags.lFlag);
+    if (l > 1)
+      l = 1;
+    if (l < 0)
+      l = 0;
+  }
+  float t = 1000;
+  if (flags.tFlag) {
+    t = atoi(flags.tFlag);
+    if (t < 0)
+      t = 0;
+  }
+
+  // Applying echo
+  for (int i = 1; i <= wav.header.fmt.NumChannels; i++) {
+    echoChannel(&(wav.data), i, wav.header.fmt.NumChannels, l, t, wav.header.fmt.SampleRate);
+  }
 
   //output file
   checkOutput(flags, &wav);
