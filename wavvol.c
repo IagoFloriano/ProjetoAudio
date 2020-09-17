@@ -95,5 +95,8 @@ int main(int argc, char *argv[]) {
   //output
   checkOutput(flags, &wav);
 
+  // frees space used
+  free(wav.data.array1b);
+
   return 0;
 }
