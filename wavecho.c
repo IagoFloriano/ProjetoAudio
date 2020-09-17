@@ -8,31 +8,47 @@
 
 void echoChannel(WAVData_t *audio, int channel, int numchannels, float echolevel, int echodelay, int sampleRate) {
   // goes backwards to the channel so there wont be echo of echo
-  int iGetEchoFrom = echodelay * sampleRate / 1000; //sampleRate * 1000 * echodelay; // how many indexes back from this channel the echo will be taken from
-  for (int i = audio->audioSize - 1; i - (iGetEchoFrom * numchannels) >= 0; i -= numchannels) {
+  int iGetEchoFrom = echodelay * sampleRate / 1000; // how many indexes back from this channel the echo will be taken from
+  for (int i = audio->audioSize - 1 + (channel - numchannels); i - (iGetEchoFrom * numchannels) >= 0; i -= numchannels) {
     switch (audio->numbytes) {
     case 1:
-      if ((audio->array1b)[i] + echolevel * (audio->array1b)[i - (iGetEchoFrom * numchannels)] > INT8_MAX) {
+      // Test if a positive value overflows to negative
+      if ((audio->array1b)[i] + echolevel * (audio->array1b)[i - (iGetEchoFrom * numchannels)] > INT8_MAX)
         (audio->array1b)[i] = INT8_MAX;
-      } else
+      // Test if a negative value overflows to positive
+      else if ((audio->array1b)[i] + echolevel * (audio->array1b)[i - (iGetEchoFrom * numchannels)] < INT8_MIN)
+        (audio->array1b)[i] = INT8_MIN;
+      else
         (audio->array1b)[i] += echolevel * (audio->array1b)[i - (iGetEchoFrom * numchannels)];
       break;
     case 2:
-      if ((audio->array2b)[i] + echolevel * (audio->array2b)[i - (iGetEchoFrom * numchannels)] > INT16_MAX) {
+      // Test if a positive value overflows to negative
+      if ((audio->array2b)[i] + echolevel * (audio->array2b)[i - (iGetEchoFrom * numchannels)] > INT16_MAX)
         (audio->array2b)[i] = INT16_MAX;
-      } else
+      // Test if a negative value overflows to positive
+      else if ((audio->array2b)[i] + echolevel * (audio->array2b)[i - (iGetEchoFrom * numchannels)] < INT16_MIN)
+        (audio->array2b)[i] = INT16_MIN;
+      else
         (audio->array2b)[i] += echolevel * (audio->array2b)[i - (iGetEchoFrom * numchannels)];
       break;
     case 3:
-      if ((audio->array3b)[i] + echolevel * (audio->array3b)[i - (iGetEchoFrom * numchannels)] > INT32_MAX) {
+      // Test if a positive value overflows to negative
+      if ((audio->array3b)[i] + echolevel * (audio->array3b)[i - (iGetEchoFrom * numchannels)] > INT32_MAX)
         (audio->array3b)[i] = INT32_MAX;
-      } else
+      // Test if a negative value overflows to positive
+      else if ((audio->array3b)[i] + echolevel * (audio->array3b)[i - (iGetEchoFrom * numchannels)] < INT32_MIN)
+        (audio->array3b)[i] = INT32_MIN;
+      else
         (audio->array3b)[i] += echolevel * (audio->array3b)[i - (iGetEchoFrom * numchannels)];
       break;
     case 4:
-      if ((audio->array4b)[i] + echolevel * (audio->array4b)[i - (iGetEchoFrom * numchannels)] > INT64_MAX) {
+      // Test if a positive value overflows to negative
+      if ((audio->array4b)[i] + echolevel * (audio->array4b)[i - (iGetEchoFrom * numchannels)] > INT64_MAX)
         (audio->array4b)[i] = INT64_MAX;
-      } else
+      // Test if a negative value overflows to positive
+      else if ((audio->array4b)[i] + echolevel * (audio->array4b)[i - (iGetEchoFrom * numchannels)] < INT64_MIN)
+        (audio->array4b)[i] = INT64_MIN;
+      else
         (audio->array4b)[i] += echolevel * (audio->array4b)[i - (iGetEchoFrom * numchannels)];
       break;
     }
