@@ -1,7 +1,7 @@
 # GRR20196049 Iago Mello Floriano
 CC = gcc
 CFLAGS = -Wall
-BINARIES = wavinfo wavvol wavnorm wavrev wavecho wavwide
+BINARIES = wavinfo wavvol wavnorm wavrev wavecho wavwide wavcat
 WAVLIBSo = wavlib.o wavio.o wavflags.o
 WAVLIBSh = wavlib.h wavio.h wavflags.h
 
@@ -14,6 +14,7 @@ wavvol: wavvol.o ${WAVLIBSo}
 wavnorm: wavnorm.o ${WAVLIBSo}
 wavecho: wavecho.o ${WAVLIBSo}
 wavwide: wavwide.o ${WAVLIBSo}
+wavcat: wavcat.o wavlib.o
 
 # compiling objects
 wavio.o: wavio.c wavio.h
@@ -25,6 +26,7 @@ wavnorm.o: wavnorm.c ${WAVLIBSh}
 wavrev.o: wavrev.c ${WAVLIBSh}
 wavecho.o: wavecho.c ${WAVLIBSh}
 wavwide.o: wavwide.c ${WAVLIBSh}
+wavcat.o: wavcat.c wavlib.h
 
 # deletion of temporary files
 clean: 
