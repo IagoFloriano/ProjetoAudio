@@ -13,10 +13,8 @@ void printUsage(char *program) {
 
 // Inverts only the channel asked os an audio with "numchannels" channels
 void invertChannel(WAVData_t *audio, int channel, int numchannels) {
-  fprintf(stderr, "inverting a channel\n");
   for (int i = channel - 1; i < audio->audioSize / 2; i += numchannels) {
-    int indexOppsite = 2; // audio->audioSize - numchannels + (channel - 1) - i; // variable to store the value of the index that i will swap with
-    // fprintf(stderr, "swapping %i and %i\n", i, indexOppsite);
+    int indexOppsite = audio->audioSize - numchannels - i; // variable to store the value of the index that i will swap with
 
     // temporary varibles for swapping
     int8_t temp1b = 0;
@@ -56,8 +54,6 @@ int main(int argc, char **argv) {
     printUsage(argv[0]);
   checkInput(flags, &wav);
 
-  fprintf(stderr, "correctly read the file\n");
-
   // Invert all channels
   for (int i = 1; i <= wav.header.fmt.NumChannels; i++) {
     invertChannel(&(wav.data), i, wav.header.fmt.NumChannels);
@@ -67,7 +63,7 @@ int main(int argc, char **argv) {
   checkOutput(flags, &wav);
 
   // Free space
-  // free(wav.data.array1b);
+  free(wav.data.array1b);
 
   return 0;
 }
