@@ -36,6 +36,7 @@ int wavConcat(WAV_t *a, WAV_t *b) {
   temp = realloc(a->data.array1b, (a->data.audioSize * a->data.numbytes) + (b->data.audioSize * b->data.numbytes));
   if (!temp)
     return -1;
+  a->data.array1b = temp;
   // Coppies information
   for (int i = 0; i < b->data.audioSize; i++) {
     switch (a->data.numbytes) {
@@ -68,13 +69,16 @@ int wavConcat(WAV_t *a, WAV_t *b) {
 int getO(int argc, char **argv) {
   // gets the index to return
   int i;
-  for (i = 0; i < argc; i++)
-    if (strcmp("-o", argv[i]) != 0)
+  for (i = 0; i < argc; i++) {
+    if (strcmp("-o", argv[i]) == 0)
       break;
-  if (i < argc - 1)
+  }
+  if (i == argc - 2)
     return i;
   if (i == argc)
     return -1;
+  if (i < argc - 2)
+    return -3;
   return -2;
 }
 
@@ -83,18 +87,18 @@ int main(int argc, char **argv) {
   WAV_t wOutput;
   // Taking care of the flag
   int iOutput;
-  if ((iOutput = getO(argc, argv)) < -2) {
-    fprintf(stderr, "The flag \"-o\" should be followed by a file and be placed after all the files to concatenate, closing program");
+  if ((iOutput = getO(argc, argv)) < -1) {
+    fprintf(stderr, "The flag \"-o\" should be followed by a file and be placed after all the files to concatenate, closing program\n");
     return 1;
   }
   // Gets the index of the last file to be read
   int last = argc - 1;
-  if (iOutput > -2)
+  if (iOutput > -1)
     last -= 2;
 
   // Closes the program if only one file was passed
-  if (last < 2) {
-    fprintf(stderr, "More than one file should be passed as input");
+  if (last < 1) {
+    fprintf(stderr, "More than one file should be passed as input\n");
     return 1;
   }
 
@@ -103,6 +107,7 @@ int main(int argc, char **argv) {
 
   // Adds the others file to the wav to be outputed
   for (int i = 2; i <= last; i++) {
+    // fprintf(stderr, "reading %s\n", argv[i]);
     readWav(&wInput, argv[i]);
     if (wavConcat(&wOutput, &wInput) == -1) {
       fprintf(stderr, "There was an error allocating space, stopping concatenation with %s\n", argv[i]);
@@ -111,12 +116,13 @@ int main(int argc, char **argv) {
     free(wInput.data.array1b);
   }
 
-  FILE *f = stdin;
-  if (iOutput > -2) {
+  FILE *f = stdout;
+  if (iOutput > -1) {
     f = fopen(argv[iOutput + 1], "w");
   }
 
   writeWav(f, &wOutput);
+  fclose(f);
 
   free(wOutput.data.array1b);
 
