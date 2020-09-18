@@ -19,22 +19,22 @@ void applyWide(WAVData_t *audio, float k) {
     case 1:
       diff = (audio->array1b)[i] - (audio->array1b)[i + 1];
       (audio->array1b)[i] += k * diff;
-      (audio->array1b)[i] -= k * diff;
+      (audio->array1b)[i + 1] -= k * diff;
       break;
     case 2:
       diff = (audio->array2b)[i] - (audio->array2b)[i + 1];
       (audio->array2b)[i] += k * diff;
-      (audio->array2b)[i] -= k * diff;
+      (audio->array2b)[i + 1] -= k * diff;
       break;
     case 3:
       diff = (audio->array3b)[i] - (audio->array3b)[i + 1];
       (audio->array3b)[i] += k * diff;
-      (audio->array3b)[i] -= k * diff;
+      (audio->array3b)[i + 1] -= k * diff;
       break;
     case 4:
       diff = (audio->array4b)[i] - (audio->array4b)[i + 1];
       (audio->array4b)[i] += k * diff;
-      (audio->array4b)[i] -= k * diff;
+      (audio->array4b)[i + 1] -= k * diff;
       break;
     }
   }
