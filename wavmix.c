@@ -134,13 +134,10 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  fprintf(stderr, "trying to find the biggest file...\n");
   // Saves the biggest file as the one to be outputed
   int iMax = getimax(last, argv);
-  fprintf(stderr, "biggest file is %s\n", argv[iMax]);
   readWav(&wOutput, argv[iMax]);
   wavDiv(&wOutput, last); // Last is also the ammount of files
-  fprintf(stderr, "%s was read\n", argv[iMax]);
 
   // Mixing the audio
   for (int i = 1; i <= last; i++) {
@@ -149,9 +146,7 @@ int main(int argc, char **argv) {
       readWav(&wInput, argv[i]);
       wavDiv(&wInput, last);
       wavMix(&wOutput, &wInput);
-      fprintf(stderr, "%s was mixed with %s\n", argv[i], argv[iMax]);
       free(wInput.data.array1b);
-      fprintf(stderr, "%s was freed\n", argv[i]);
     }
   }
 
