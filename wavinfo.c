@@ -41,20 +41,24 @@ void fprintheader(FILE *f, WAVHEADER_t header) {
 
 void printUsage(char *programName) {
   fprintf(stderr, "Correct usage is %s -i input.wav\n", programName);
-  exit(0);
+  exit(1);
 }
 
 int main(int argc, char *argv[]) {
   WAVHEADER_t hAudio;
   WavFlags_t flags;
+  //if flag was used, but wrongly
   if (wavflags(argc, argv, "i:", &flags) == -1)
+    printUsage(argv[0]);
+  //if no flag was used but file(s) passed for the program
+  if (!flags.iFlag && argc > 1)
     printUsage(argv[0]);
 
   FILE *f;
-  if (flags.iFlag > 0)
-    readHeaderInput(flags.iFlag, &hAudio, &f);
-  else
-    readHeaderInput(NULL, &hAudio, &f);
+  if (readHeaderInput(flags.iFlag, &hAudio, &f) == -1) {
+    fprintf(stderr, "Unable to open file, closing program\n");
+    return 1;
+  }
   fclose(f);
 
   fprintheader(stdout, hAudio);
