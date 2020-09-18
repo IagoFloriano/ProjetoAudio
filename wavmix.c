@@ -29,19 +29,19 @@ void readWav(WAV_t *wav, char *path) {
 // a can NOT have less samples than be or there will be errors
 void wavMix(WAV_t *a, WAV_t *b) {
   // Adds samples
-  for (int i = 0; i < a->data.numbytes; i++) {
-    switch (a->data.numbytes) {
+  for (int i = 0; i < b->data.audioSize; i++) {
+    switch (b->data.numbytes) {
     case 1:
-      (a->data.array1b)[i] = (b->data.array1b)[i] + (a->data.array1b)[i];
+      (a->data.array1b)[i] += (b->data.array1b)[i];
       break;
     case 2:
-      (a->data.array2b)[i] = (b->data.array2b)[i] + (a->data.array2b)[i];
+      (a->data.array2b)[i] += (b->data.array2b)[i];
       break;
     case 3:
-      (a->data.array3b)[i] = (b->data.array3b)[i] + (a->data.array3b)[i];
+      (a->data.array3b)[i] += (b->data.array3b)[i];
       break;
     case 4:
-      (a->data.array4b)[i] = (b->data.array4b)[i] + (a->data.array4b)[i];
+      (a->data.array4b)[i] += (b->data.array4b)[i];
       break;
     }
   }
@@ -52,16 +52,16 @@ void wavDiv(WAV_t *wav, int div) {
   for (int i = 0; i < wav->data.audioSize; i++) {
     switch (wav->data.numbytes) {
     case 1:
-      (wav->data.array1b)[i] *= (float)1 / div;
+      (wav->data.array1b)[i] = (wav->data.array1b)[i] / div;
       break;
     case 2:
-      (wav->data.array2b)[i] *= (float)1 / div;
+      (wav->data.array2b)[i] = (wav->data.array2b)[i] / div;
       break;
     case 3:
-      (wav->data.array3b)[i] *= (float)1 / div;
+      (wav->data.array3b)[i] = (wav->data.array3b)[i] / div;
       break;
     case 4:
-      (wav->data.array4b)[i] *= (float)1 / div;
+      (wav->data.array4b)[i] = (wav->data.array4b)[i] / div;
       break;
     }
   }
@@ -108,6 +108,7 @@ int getimax(int n, char **argv) {
       imax = i;
       max = tempheader.fmt.SubChunkSize;
     }
+    i++;
   } while (i <= n);
 
   return imax;
@@ -119,7 +120,7 @@ int main(int argc, char **argv) {
   // Taking care of the flag
   int iOutput;
   if ((iOutput = getO(argc, argv)) < -1) {
-    fprintf(stderr, "The flag \"-o\" should be followed by a file and be placed after all the files to concatenate, closing program\n");
+    fprintf(stderr, "The flag \"-o\" should be followed by a file and be placed after all the files to mix, closing program\n");
     return 1;
   }
   // Gets the index of the last file to be read
@@ -133,10 +134,13 @@ int main(int argc, char **argv) {
     return 1;
   }
 
+  fprintf(stderr, "trying to find the biggest file...\n");
   // Saves the biggest file as the one to be outputed
   int iMax = getimax(last, argv);
+  fprintf(stderr, "biggest file is %s\n", argv[iMax]);
   readWav(&wOutput, argv[iMax]);
   wavDiv(&wOutput, last); // Last is also the ammount of files
+  fprintf(stderr, "%s was read\n", argv[iMax]);
 
   // Mixing the audio
   for (int i = 1; i <= last; i++) {
@@ -145,7 +149,9 @@ int main(int argc, char **argv) {
       readWav(&wInput, argv[i]);
       wavDiv(&wInput, last);
       wavMix(&wOutput, &wInput);
+      fprintf(stderr, "%s was mixed with %s\n", argv[i], argv[iMax]);
       free(wInput.data.array1b);
+      fprintf(stderr, "%s was freed\n", argv[i]);
     }
   }
 
