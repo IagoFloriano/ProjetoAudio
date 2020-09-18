@@ -1,7 +1,7 @@
 # GRR20196049 Iago Mello Floriano
 CC = gcc
 CFLAGS = -Wall
-BINARIES = wavinfo wavvol wavnorm wavrev wavecho wavwide wavcat
+BINARIES = wavinfo wavvol wavnorm wavrev wavecho wavwide wavcat wavmix
 WAVLIBSo = wavlib.o wavio.o wavflags.o
 WAVLIBSh = wavlib.h wavio.h wavflags.h
 
