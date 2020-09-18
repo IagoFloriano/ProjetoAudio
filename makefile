@@ -15,6 +15,7 @@ wavnorm: wavnorm.o ${WAVLIBSo}
 wavecho: wavecho.o ${WAVLIBSo}
 wavwide: wavwide.o ${WAVLIBSo}
 wavcat: wavcat.o wavlib.o
+wavmix: wavmix.o wavlib.o
 
 # compiling objects
 wavio.o: wavio.c wavio.h
@@ -27,6 +28,7 @@ wavrev.o: wavrev.c ${WAVLIBSh}
 wavecho.o: wavecho.c ${WAVLIBSh}
 wavwide.o: wavwide.c ${WAVLIBSh}
 wavcat.o: wavcat.c wavlib.h
+wavmix.o: wavmix.c wavlib.h
 
 # deletion of temporary files
 clean: 
