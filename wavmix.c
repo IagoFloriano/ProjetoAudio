@@ -104,9 +104,9 @@ int getimax(int n, char **argv) {
     }
     fclose(f);
     // Get the max index
-    if (max < tempheader.fmt.SubChunkSize) {
+    if (max < tempheader.riff.ChunkSize) {
       imax = i;
-      max = tempheader.fmt.SubChunkSize;
+      max = tempheader.riff.ChunkSize;
     }
     i++;
   } while (i <= n);
