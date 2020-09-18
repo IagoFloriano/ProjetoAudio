@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
     last -= 2;
 
   // Closes the program if only one file was passed
-  if (last < 1) {
+  if (last < 2) {
     fprintf(stderr, "More than one file should be passed as input\n");
     return 1;
   }
@@ -107,7 +107,6 @@ int main(int argc, char **argv) {
 
   // Adds the others file to the wav to be outputed
   for (int i = 2; i <= last; i++) {
-    // fprintf(stderr, "reading %s\n", argv[i]);
     readWav(&wInput, argv[i]);
     if (wavConcat(&wOutput, &wInput) == -1) {
       fprintf(stderr, "There was an error allocating space, stopping concatenation with %s\n", argv[i]);
